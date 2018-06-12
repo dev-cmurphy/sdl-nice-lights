@@ -4,16 +4,18 @@
 
 Scene::Scene(SDL_Window* win, Vector2 size) : physics(10, 10, 128), visuals(win, size, &physics), activeObjects(){
 	
-	visuals.addLight(Vector2(50, 50), 255, 255, 255, 255, 2);
-	visuals.addLight(Vector2(0, 20), 120, 255, 120, 255, 2);
+	visuals.addLight(Vector2(0, 0), 255, 255, 255, 255, 1);
+	//visuals.addLight(Vector2(0, 20), 120, 255, 120, 255, 2);
 
 	visuals.setGlobalIllumination(10, 10, 10);
 	
-	visuals.addComponent(&staticObjects.addObjectAt(Vector2(0, 0)), "allo.png");
-	staticObjects.getObjectsAt(0, 0).front().position = Vector2(100, 100);
+
 	visuals.addComponent(&staticObjects.addObjectAt(Vector2(0, 0)), "background.png");
+	staticObjects.getObjectsAt(0, 0).back().position = Vector2(201, 300);
+	visuals.addComponent(&staticObjects.addObjectAt(Vector2(0, 0)), "allo.png");
+	staticObjects.getObjectsAt(0, 0).back().position = Vector2(100, 100);
 	
-	physics.addStaticComponent(&staticObjects.getObjectsAt(0, 0).front(), Vector2(170, 40));
+	physics.addStaticComponent(&staticObjects.getObjectsAt(0, 0).back(), Vector2(170, 40));
 	visuals.addComponent(&player, "grr.png");
 }
 

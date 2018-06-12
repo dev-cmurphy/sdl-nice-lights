@@ -29,7 +29,8 @@ void CollisionSystem::addStaticComponent(GameObject * h, Vector2 size)
 {
 	Vector2 pos = h->position;
 	Vector2 gridPos = pos * (1.0f / (float)cellSize);
-
+	gridPos.x = (int)(gridPos.x + 0.5f);
+	gridPos.y = (int)(gridPos.y + 0.5f);
 	staticComponents.addObjectAt(gridPos, CollisionComponent(h, size));
 }
 
