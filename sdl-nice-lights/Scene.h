@@ -1,6 +1,9 @@
 #pragma once
 #include "Grid.h"
 #include "VisualSystem.h"
+#include "Command.h"
+
+class Command;
 
 class Scene
 {
@@ -59,5 +62,8 @@ private:
 
 	VisualSystem visuals;
 	CollisionSystem physics;
+
+	//replace by InputSystem avec queue de undo/redo + return new Commands? avec handleInput() ?
+	std::unordered_map<Uint32, Command*> commands;
 };
 

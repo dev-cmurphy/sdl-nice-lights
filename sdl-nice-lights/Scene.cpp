@@ -2,7 +2,7 @@
 
 
 
-Scene::Scene(SDL_Window* win, Vector2 size) : physics(10, 10, 128), visuals(win, size, &physics), activeObjects(){
+Scene::Scene(SDL_Window* win, Vector2 size) : physics(10, 10, 128), visuals(win, size, &physics), activeObjects(), commands() {
 	
 	visuals.addLight(Vector2(0, 0), 255, 255, 255, 255, 1);
 	//visuals.addLight(Vector2(0, 20), 120, 255, 120, 255, 2);

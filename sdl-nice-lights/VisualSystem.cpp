@@ -72,16 +72,16 @@ void VisualSystem::update()
 
 	for (auto i = lights.begin(); i != lights.end(); i++) {
 
-		Vector2 gridPos = i->second.position * (1.0f / (float)physics->cellSize);
+		/*Vector2 gridPos = i->second.position * (1.0f / (float)physics->cellSize);
 		gridPos.x = (int)(gridPos.x + 0.5f);
-		gridPos.y = (int)(gridPos.y + 0.5f);
+		gridPos.y = (int)(gridPos.y + 0.5f);*/
 
 		SDL_Rect renderRect, destRect;
 		renderRect = i->second.texture.getRect(Vector2(0,0), i->second.scale);
 		destRect = i->second.texture.getRect(i->second.position + (i->second.texture.getSize() * -0.5f), i->second.scale);
 		//std::cout << gridPos.x << ", " << gridPos.y << "\n";
 
-		for (auto c = physics->staticComponents.getObjectsAt(gridPos.x, gridPos.y).begin();
+		/*for (auto c = physics->staticComponents.getObjectsAt(gridPos.x, gridPos.y).begin();
 			c != physics->staticComponents.getObjectsAt(gridPos.x, gridPos.y).end(); c++) {
 
 			// si light under obj et dist light obj < lightRadius alors cut top of light
@@ -108,7 +108,7 @@ void VisualSystem::update()
 				destRect.h = renderRect.h;
 				//destRect.y += (texSize.y / 2) + yDist + (c->size.y / 2);
 			}
-		}
+		}*/
 		SDL_RenderCopy(renderer, i->second.texture.getTexture(), &renderRect, &destRect);
 	}
 
