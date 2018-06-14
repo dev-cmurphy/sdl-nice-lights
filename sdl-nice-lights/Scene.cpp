@@ -17,6 +17,10 @@ Scene::Scene(SDL_Window* win, Vector2 size) : physics(10, 10, 128), visuals(win,
 	
 	physics.addStaticComponent(&staticObjects.getObjectsAt(0, 0).back(), Vector2(170, 40));
 	visuals.addComponent(&player, "grr.png");
+	commands[SDLK_UP] = "up";
+	commands[SDLK_DOWN] = "down";
+	commands[SDLK_LEFT] = "left";
+	commands[SDLK_RIGHT] = "right";
 }
 
 Scene::~Scene()
@@ -31,7 +35,36 @@ bool Scene::input()
 			return false;
 		}
 		else if (e.type == SDL_KEYDOWN) {
-			player.position += Vector2(2, 2);
+
+			if (commands[e.key.keysym.sym] == "up") {
+
+				Command* com = new MoveCommand(&player, Vector2(0, -2));
+				com->execute();
+				delete com;
+			}
+
+			if (commands[e.key.keysym.sym] == "down") {
+
+				Command* com = new MoveCommand(&player, Vector2(0, 2));
+				com->execute();
+				delete com;
+			}
+
+			if (commands[e.key.keysym.sym] == "left") {
+
+				Command* com = new MoveCommand(&player, Vector2(-2, 0));
+				com->execute();
+				delete com;
+			}
+
+			if (commands[e.key.keysym.sym] == "right") {
+
+				Command* com = new MoveCommand(&player, Vector2(2, 0));
+				com->execute();
+				delete com;
+			}
+
+			//player.position += Vector2(2, 2);
 			visuals.getLight(0).position += Vector2(1, 1);
 		}
 	}

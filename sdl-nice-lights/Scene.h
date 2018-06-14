@@ -2,6 +2,7 @@
 #include "Grid.h"
 #include "VisualSystem.h"
 #include "Command.h"
+#include "MoveCommand.h"
 
 class Command;
 
@@ -64,6 +65,6 @@ private:
 	CollisionSystem physics;
 
 	//replace by InputSystem avec queue de undo/redo + return new Commands? avec handleInput() ?
-	std::unordered_map<Uint32, Command*> commands;
+	std::unordered_map<Uint32, std::string> commands;
 };
 

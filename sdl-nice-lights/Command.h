@@ -1,7 +1,4 @@
 #pragma once
-#include "Scene.h"
-
-class Scene;
 
 class Command
 {
