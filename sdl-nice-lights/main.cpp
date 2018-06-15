@@ -18,15 +18,29 @@ int main(int argc, char* argv[]) {
 	startClock = SDL_GetTicks();
 	int frames = 0;
 	bool quit = false;
+
+	float last = SDL_GetTicks();
+	float lag = 0;
+
+	const int MS_PER_PHYSICS_UPDATE = 17;
+
 	while (!quit) {
+
+		float current = SDL_GetTicks();
+		float elapsed = current - last;
+		last = current;
+		lag += elapsed;
 
 		quit = !scene.input();
 
-		scene.update();
+		while (lag >= MS_PER_PHYSICS_UPDATE) {
+			scene.update();
+			lag -= MS_PER_PHYSICS_UPDATE;
+		}
 
-		scene.render();
+		scene.render(/*lag / MS_PER_PHYSICS_UPDATE*/);
 
-		frames++;
+		/*frames++;
 		if (frames % 100 == 0) {
 			deltaClock = (float)SDL_GetTicks() - startClock;
 			startClock = SDL_GetTicks();
@@ -36,7 +50,7 @@ int main(int argc, char* argv[]) {
 				//std::cout << deltaClock << ", " << FPS << "\n";
 			}
 			frames = 0;
-		}
+		}*/
 	}
 
 	SDL_DestroyWindow(window);

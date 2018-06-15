@@ -33,7 +33,6 @@ VisualSystem::Light & VisualSystem::getLight(unsigned int i)
 	return lights[i];
 }
 
-
 void VisualSystem::addComponent(GameObject * go, std::string file, bool newTexture)
 {
 	VisualComponent* comp = &components.getNew();
@@ -63,7 +62,7 @@ void VisualSystem::update()
 	for (int i = 0; i < activeTotal; i++) {
 		Texture& ref = textures.at(components[i].textureTag);
 		Vector2& pos = components[i].holder->position;
-		SDL_RenderCopy(renderer, ref.getTexture(), NULL, &ref.getRect(pos + (ref.getSize() * -0.5f)));
+		SDL_RenderCopy(renderer, ref.getTexture(), NULL, &ref.getRect(pos - (ref.getSize() / 2)));
 	}
 
 	//lights rendering
@@ -78,7 +77,7 @@ void VisualSystem::update()
 
 		SDL_Rect renderRect, destRect;
 		renderRect = i->second.texture.getRect(Vector2(0,0), i->second.scale);
-		destRect = i->second.texture.getRect(i->second.position + (i->second.texture.getSize() * -0.5f), i->second.scale);
+		destRect = i->second.texture.getRect(i->second.position - (i->second.texture.getSize() / 2), i->second.scale);
 		//std::cout << gridPos.x << ", " << gridPos.y << "\n";
 
 		/*for (auto c = physics->staticComponents.getObjectsAt(gridPos.x, gridPos.y).begin();

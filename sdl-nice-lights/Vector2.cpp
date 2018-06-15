@@ -59,6 +59,14 @@ Vector2 Vector2::operator*(const float & f) const
 	return vec;
 }
 
+Vector2 Vector2::operator/(const float &f) const
+{
+	Vector2 vec;
+	vec.x = x / f;
+	vec.y = y / f;
+	return vec;
+}
+
 Vector2 & Vector2::operator+=(const Vector2 & vec)
 {
 	x += vec.x;
@@ -77,5 +85,12 @@ Vector2 & Vector2::operator*=(const float & f)
 {
 	x *= f;
 	y *= f;
+	return *this;
+}
+
+Vector2 & Vector2::operator/=(const float &f)
+{
+	x /= f;
+	y /= f;
 	return *this;
 }
