@@ -23,6 +23,18 @@ float Vector2::magnitude()
 	return cachedMagnitude;
 }
 
+Vector2 Vector2::normalized()
+{
+	Vector2 v(x, y);
+	v.normalize();
+	return v;
+}
+
+void Vector2::normalize()
+{
+	operator*= (1.0f / magnitude());
+}
+
 Vector2 Vector2::operator+(const Vector2 & vec) const
 {
 	Vector2 result;

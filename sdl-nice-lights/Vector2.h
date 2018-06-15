@@ -11,6 +11,9 @@ public:
 	float sqrMagnitude();
 	float magnitude();
 
+	Vector2 normalized();
+	void normalize();
+
 	Vector2 operator+(const Vector2&) const;
 	Vector2 operator-(const Vector2&) const;
 	Vector2 operator*(const float&) const;
