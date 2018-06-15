@@ -16,18 +16,26 @@ int main(int argc, char* argv[]) {
 	float deltaClock = 0;
 	float FPS = 0;
 	startClock = SDL_GetTicks();
+	int frames = 0;
 	bool quit = false;
 	while (!quit) {
 
 		quit = !scene.input();
+
+		scene.update();
+
 		scene.render();
 
-		deltaClock = (float)SDL_GetTicks() - startClock;
-		startClock = SDL_GetTicks();
+		frames++;
+		if (frames % 100 == 0) {
+			deltaClock = (float)SDL_GetTicks() - startClock;
+			startClock = SDL_GetTicks();
 
-		if (deltaClock != 0) {
-			FPS = 1000.0f / (float)deltaClock;
-			std::cout << deltaClock << ", " << FPS << "\n";
+			if (deltaClock != 0) {
+				FPS = frames * 1000.0f / (float)deltaClock;
+				//std::cout << deltaClock << ", " << FPS << "\n";
+			}
+			frames = 0;
 		}
 	}
 

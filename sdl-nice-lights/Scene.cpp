@@ -17,7 +17,7 @@ Scene::Scene(SDL_Window* win, Vector2 size) : physics(10, 10, 128), visuals(win,
 	
 	physics.addStaticComponent(&staticObjects.getObjectsAt(0, 0).back(), Vector2(170, 40));
 
-	for (int i = 0; i < 1000; i++) {
+	for (int i = 0; i < 100; i++) {
 		physics.addStaticComponent(&staticObjects.getObjectsAt(0, 0).back(), Vector2(171, 40));
 	}
 
@@ -73,10 +73,13 @@ bool Scene::input()
 	return true;
 }
 
+void Scene::update()
+{
+	physics.update();
+}
+
 
 void Scene::render()
 {
-	physics.update();
 	visuals.update();
-	
 }

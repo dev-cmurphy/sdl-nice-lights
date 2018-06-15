@@ -13,6 +13,7 @@ public:
 	Scene(SDL_Window* win, Vector2 size);
 	~Scene();
 	bool input();
+	void update();
 	void render();
 
 private:
