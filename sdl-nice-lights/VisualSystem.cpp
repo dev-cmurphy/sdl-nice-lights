@@ -33,10 +33,10 @@ VisualSystem::Light & VisualSystem::getLight(unsigned int i)
 	return lights[i];
 }
 
-void VisualSystem::addComponent(GameObject * go, std::string file, bool newTexture)
+void VisualSystem::addComponent(int h, std::string file, bool newTexture)
 {
 	VisualComponent* comp = &components.getNew();
-	comp->holder = go;
+	comp->holder = h;
 
 	int total = textures.count(file);
 	if (total == 0 || newTexture) {
@@ -51,7 +51,7 @@ VisualSystem::~VisualSystem()
 	SDL_DestroyRenderer(renderer);
 }
 
-void VisualSystem::update()
+void VisualSystem::update(std::vector<GameObject>& objects)
 {
 	SDL_RenderClear(renderer);
 
@@ -61,7 +61,7 @@ void VisualSystem::update()
 	int activeTotal = components.activeTotal();
 	for (int i = 0; i < activeTotal; i++) {
 		Texture& ref = textures.at(components[i].textureTag);
-		Vector2& pos = components[i].holder->position;
+		Vector2& pos = objects[components[i].holder].position;
 		SDL_RenderCopy(renderer, ref.getTexture(), NULL, &ref.getRect(pos - (ref.getSize() / 2)));
 	}
 
@@ -117,7 +117,7 @@ void VisualSystem::update()
 	SDL_RenderPresent(renderer);
 }
 
-VisualSystem::VisualComponent::VisualComponent(GameObject * h) : Component(h)
+VisualSystem::VisualComponent::VisualComponent(int h) : Component(h)
 {
 }
 

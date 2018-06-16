@@ -17,8 +17,8 @@ public:
 	void render();
 
 private:
-	GameObject player;
-	std::list<GameObject> objects;
+	int player;
+	std::vector<GameObject> objects;
 
 	//Grid<GameObject> staticObjects;
 

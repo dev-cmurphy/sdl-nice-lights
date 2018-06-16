@@ -1,12 +1,12 @@
-/*#include "GameObject.h"
+#include "GameObject.h"
 
 
 
-GameObject::GameObject()
+GameObject::GameObject(std::string t) : tag(t)
 {
 }
 
 
 GameObject::~GameObject()
 {
-}*/
+}

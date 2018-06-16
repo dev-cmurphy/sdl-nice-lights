@@ -1,7 +1,5 @@
 #include "Scene.h"
 
-
-
 Scene::Scene(SDL_Window* win, Vector2 size) : physics(10, 10, 128), visuals(win, size, &physics), objects(), commands() {
 	
 	visuals.addLight(Vector2(0, 0), 255, 255, 255, 255, 1);
@@ -10,20 +8,22 @@ Scene::Scene(SDL_Window* win, Vector2 size) : physics(10, 10, 128), visuals(win,
 	visuals.setGlobalIllumination(40, 30, 10);
 	
 	objects.push_back(GameObject());
-	visuals.addComponent(&objects.back(), "background.png");
+	objects.push_back(GameObject());
+	visuals.addComponent(1, "background.png");
 	objects.back().position = Vector2(300, 200);
 
 	objects.push_back(GameObject());
-	visuals.addComponent(&objects.back(), "allo.png");
+	visuals.addComponent(2, "allo.png");
 	objects.back().position = Vector2(100, 100);
 	
 	//physics.addStaticComponent(&staticObjects.getObjectsAt(0, 0).back(), Vector2(170, 40));
 
 	for (int i = 0; i < 100; i++) {
-		physics.addStaticComponent(&objects.back(), Vector2(171, 40));
+		objects.push_back(GameObject());
+		physics.addStaticComponent(i + 3, objects[i+3].position, Vector2(171, 40));
 	}
 
-	visuals.addComponent(&player, "grr.png");
+	visuals.addComponent(0, "grr.png");
 	commands["up"] = SDL_SCANCODE_UP;
 	commands["down"] = SDL_SCANCODE_DOWN;
 	commands["left"] = SDL_SCANCODE_LEFT;
@@ -65,11 +65,11 @@ bool Scene::input()
 	if (dir.sqrMagnitude() > 0) {
 
 		dir.normalize();
-		Command* com = new MoveCommand(&player, dir * 100.0f / 17.0f);
+		Command* com = new MoveCommand(&objects[player], dir * 100.0f / 17.0f);
 		com->execute();
 		delete com;
 
-		visuals.getLight(0).position = player.position;
+		visuals.getLight(0).position = objects[player].position;
 	}
 
 	return true;
@@ -77,11 +77,11 @@ bool Scene::input()
 
 void Scene::update()
 {
-	physics.update();
+	physics.update(objects);
 }
 
 
 void Scene::render()
 {
-	visuals.update();
+	visuals.update(objects);
 }

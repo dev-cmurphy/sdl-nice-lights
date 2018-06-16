@@ -1,24 +1,17 @@
 #pragma once
 #include "GameObject.h"
-#include <queue>
-#include <vector>
-#include <SDL.h>
 
 class Component
 {
 public:
 
-	Component(GameObject* holder = NULL);
+	Component(int holder = -1);
 	virtual ~Component() {};
 
-	void notify(Uint8 message);
-	void receive(Uint8 message);
 
 protected:
 
-	GameObject * holder;
+	int holder; // index dans le tableau d'entités de la Scene
 
-	std::vector<Component*> observers;
-	std::queue<Uint8> messages;
 };
 

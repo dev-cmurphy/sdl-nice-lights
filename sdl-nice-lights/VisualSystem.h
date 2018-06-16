@@ -11,10 +11,10 @@ public:
 	VisualSystem(SDL_Window*, Vector2 size, CollisionSystem* physics);
 	~VisualSystem();
 
-	void update(); 
+	void update(std::vector<GameObject>& objects);
 	void setGlobalIllumination(Uint8 r, Uint8 g, Uint8 b);
 
-	void addComponent(GameObject* go, std::string file, bool newTexture = false);
+	void addComponent(int holder, std::string file, bool newTexture = false);
 
 	struct Light {
 		Vector2 position;
@@ -31,7 +31,7 @@ protected:
 	class VisualComponent : public Component {
 		friend class VisualSystem;
 	public:
-		VisualComponent(GameObject* h = NULL);
+		VisualComponent(int holder = -1);
 		~VisualComponent();
 
 		std::string textureTag;
