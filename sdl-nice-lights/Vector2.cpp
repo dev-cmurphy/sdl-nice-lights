@@ -1,7 +1,40 @@
 #include "Vector2.h"
 
 
-Vector2::Vector2(float x, float y) : x(x), y(y)
+Vector2::Vector2(std::bitset<64> bits)
+{
+	int ix, iy;
+
+	// splits
+	// 32 bit pour x et y
+	// le premier bit est le signe
+
+	if (bits[31]) { // si le x est négatif 
+		bits[31] = 0;
+		ix = (int)(bits << 32 >> 32).to_ulong();
+		ix *= -1;
+	}
+	else {
+		ix = (int)(bits << 32 >> 32).to_ulong();
+	}
+
+	//pour avoir le y
+	bits >>= 32;
+
+	if (bits[31]) { 
+		bits[31] = 0;
+		iy = (int)(bits).to_ulong();
+		iy *= -1;
+	}
+	else {
+		iy = (int)(bits).to_ulong();
+	}
+
+	x = ix;
+	y = iy;
+}
+
+Vector2::Vector2(float fx, float fy) : x(fx), y(fy)
 {
 	cachedMagnitude = -1;
 }
@@ -93,4 +126,39 @@ Vector2 & Vector2::operator/=(const float &f)
 	x /= f;
 	y /= f;
 	return *this;
+}
+
+std::bitset<64> Vector2::toBitset()
+{
+	std::bitset<64> data;
+	int ix, iy;
+	ix = x;
+	iy = y;
+
+	// splits
+	// 32 bit pour x et y
+	// le premier bit est le signe
+
+	if (iy >= 0) {
+		data |= iy;
+		data[31] = 0; 
+	}
+	else  {
+		data |= -iy;
+		data[31] = 1;
+	}
+
+	// on fait de la place pour le x
+	data <<= 32;
+
+	if (ix >= 0) {
+		data |= ix;
+		data[31] = 0;
+	}
+	else {
+		data |= -ix;
+		data[31] = 1;
+	}
+
+	return data;
 }

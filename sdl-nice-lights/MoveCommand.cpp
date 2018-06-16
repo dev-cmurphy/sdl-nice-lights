@@ -10,7 +10,7 @@ MoveCommand::~MoveCommand()
 
 void MoveCommand::execute()
 {
-	actor->position += delta;
+	actor->sendMessage(MSG_MOVE, delta.toBitset());
 }
 
 void MoveCommand::undo()

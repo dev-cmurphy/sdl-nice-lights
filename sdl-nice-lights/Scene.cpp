@@ -36,6 +36,8 @@ Scene::~Scene()
 
 bool Scene::input()
 {
+	objects[player].clearMessages();
+
 	SDL_Event e;
 	while (SDL_PollEvent(&e) != 0) {
 		if (e.type == SDL_QUIT) {
@@ -77,6 +79,13 @@ bool Scene::input()
 
 void Scene::update()
 {
+	// test msg, to do in something like input comp or movecompwhatever
+
+	if (objects[player].hasMessage(MSG_MOVE)) {
+
+		objects[player].position += Vector2(objects[player].getMessage(MSG_MOVE));
+	}
+
 	physics.update(objects);
 }
 

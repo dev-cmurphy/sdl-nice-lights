@@ -37,7 +37,6 @@ void CollisionSystem::update(std::vector<GameObject>& objects)
 
 					}
 				}
-
 			}
 		}
 	}

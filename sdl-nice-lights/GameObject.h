@@ -2,14 +2,17 @@
 #include "Vector2.h"
 #include <SDL.h>
 #include <string>
+#include <bitset>
+#include <unordered_map>
 
 /*struct GameObject {
 Vector2 position;
 };*/
 
-struct message {
-	Uint8 type;
-	Uint16 data;
+enum MSG_TYPE
+{
+	MSG_MOVE = 1,
+	MSG_COLLISION = 2
 };
 
 class GameObject
@@ -22,8 +25,14 @@ public:
 
 	std::string tag; // for debugging purposes
 
-protected:
+	void sendMessage(MSG_TYPE type, std::bitset<64> data);
+	std::bitset<64> getMessage(MSG_TYPE type);
+	bool hasMessage(MSG_TYPE t);
 
+	void clearMessages();
+
+protected:
+	std::unordered_map<MSG_TYPE, std::bitset<64>> messages;
 
 };
 

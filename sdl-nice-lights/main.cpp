@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Scene.h"
+#include <unordered_set>
 
 int main(int argc, char* argv[]) {
 
@@ -47,7 +48,7 @@ int main(int argc, char* argv[]) {
 
 			if (deltaClock != 0) {
 				FPS = frames * 1000.0f / (float)deltaClock;
-				std::cout << deltaClock << ", " << FPS << "\n";
+				//std::cout << deltaClock << ", " << FPS << "\n";
 			}
 			frames = 0;
 		}
