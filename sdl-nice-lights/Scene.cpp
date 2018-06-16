@@ -65,7 +65,7 @@ bool Scene::input()
 	if (dir.sqrMagnitude() > 0) {
 
 		dir.normalize();
-		Command* com = new MoveCommand(&player, dir *  0.15f);
+		Command* com = new MoveCommand(&player, dir * 100.0f / 17.0f);
 		com->execute();
 		delete com;
 

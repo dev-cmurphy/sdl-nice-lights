@@ -31,9 +31,9 @@ int main(int argc, char* argv[]) {
 		last = current;
 		lag += elapsed;
 
-		quit = !scene.input();
 
 		while (lag >= MS_PER_PHYSICS_UPDATE) {
+			quit = !scene.input();
 			scene.update();
 			lag -= MS_PER_PHYSICS_UPDATE;
 		}
