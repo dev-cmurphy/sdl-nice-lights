@@ -39,6 +39,17 @@ public:
 		return active - 1;
 	}
 
+	int create(const T& ref) {
+		if (active == size && shouldExpand) {
+			size *= 2;
+			pool.resize(size);
+		}
+
+		activate(active);
+		get(active - 1) = ref;
+		return active - 1;
+	}
+
 	T& getNew() {
 		return get(create());
 	}

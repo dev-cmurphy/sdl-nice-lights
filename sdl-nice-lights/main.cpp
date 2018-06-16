@@ -40,17 +40,17 @@ int main(int argc, char* argv[]) {
 
 		scene.render(/*lag / MS_PER_PHYSICS_UPDATE*/);
 
-		/*frames++;
-		if (frames % 100 == 0) {
+		frames++;
+		if (frames % 1000 == 0) {
 			deltaClock = (float)SDL_GetTicks() - startClock;
 			startClock = SDL_GetTicks();
 
 			if (deltaClock != 0) {
 				FPS = frames * 1000.0f / (float)deltaClock;
-				//std::cout << deltaClock << ", " << FPS << "\n";
+				std::cout << deltaClock << ", " << FPS << "\n";
 			}
 			frames = 0;
-		}*/
+		}
 	}
 
 	SDL_DestroyWindow(window);

@@ -2,23 +2,26 @@
 
 
 
-Scene::Scene(SDL_Window* win, Vector2 size) : physics(10, 10, 128), visuals(win, size, &physics), activeObjects(), commands() {
+Scene::Scene(SDL_Window* win, Vector2 size) : physics(10, 10, 128), visuals(win, size, &physics), objects(), commands() {
 	
 	visuals.addLight(Vector2(0, 0), 255, 255, 255, 255, 1);
 	//visuals.addLight(Vector2(0, 20), 120, 255, 120, 255, 2);
 
 	visuals.setGlobalIllumination(40, 30, 10);
 	
-	visuals.addComponent(&staticObjects.addObjectAt(Vector2(0, 0)), "background.png");
-	staticObjects.getObjectsAt(0, 0).back().position = Vector2(300, 200);
-	visuals.addComponent(&staticObjects.addObjectAt(Vector2(0, 0)), "allo.png");
-	staticObjects.getObjectsAt(0, 0).back().position = Vector2(100, 100);
+	objects.push_back(GameObject());
+	visuals.addComponent(&objects.back(), "background.png");
+	objects.back().position = Vector2(300, 200);
+
+	objects.push_back(GameObject());
+	visuals.addComponent(&objects.back(), "allo.png");
+	objects.back().position = Vector2(100, 100);
 	
 	//physics.addStaticComponent(&staticObjects.getObjectsAt(0, 0).back(), Vector2(170, 40));
 
-	/*for (int i = 0; i < 1000; i++) {
-		physics.addStaticComponent(&staticObjects.getObjectsAt(0, 0).back(), Vector2(171, 40));
-	}*/
+	for (int i = 0; i < 100; i++) {
+		physics.addStaticComponent(&objects.back(), Vector2(171, 40));
+	}
 
 	visuals.addComponent(&player, "grr.png");
 	commands["up"] = SDL_SCANCODE_UP;

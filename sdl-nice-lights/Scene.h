@@ -18,9 +18,9 @@ public:
 
 private:
 	GameObject player;
-	std::list<GameObject> activeObjects;
+	std::list<GameObject> objects;
 
-	Grid<GameObject> staticObjects;
+	//Grid<GameObject> staticObjects;
 
 	/*
 	

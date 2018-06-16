@@ -1,6 +1,6 @@
 #pragma once
 #include "GameObject.h"
-#include <list>
+#include "ObjectPooler.h"
 #include <vector>
 
 template <typename T>
@@ -16,15 +16,15 @@ public:
 		height = h;
 
 		for (int i = 0; i < w; i++) {
-			std::vector < std::list<T> > objs;
+			std::vector < ObjectPooler<T> > objs;
 			for (int j = 0; j < h; j++) {
-				objs.push_back(std::list<T>());
+				objs.push_back(ObjectPooler<T>(8));
 			}
 			objects.push_back(objs);
 		}
 	}
 
-	std::list<T>& getObjectsAt(size_t x, size_t y)
+	ObjectPooler<T>& getObjectsAt(size_t x, size_t y)
 	{
 		return objects[x][y];
 	}
@@ -33,15 +33,14 @@ public:
 		Vector2 gridPos = pos;
 		gridPos.x = (int)(pos.x + 0.5f);
 		gridPos.y = (int)(pos.y + 0.5f);
-		objects[gridPos.x][gridPos.y].push_back(T());
-		return objects[gridPos.x][gridPos.y].back();
+		return objects[gridPos.x][gridPos.y].getNew();
 	}
 
-	void addObjectAt(Vector2 pos, T&& object) {
+	void addObjectAt(Vector2 pos, T&& ref = T()) {
 		Vector2 gridPos = pos;
 		gridPos.x = (int)(pos.x + 0.5f);
 		gridPos.y = (int)(pos.y + 0.5f);
-		objects[gridPos.x][gridPos.y].push_back(object);
+		objects[gridPos.x][gridPos.y].create(ref);
 	}
 
 	const int getWidth() const {
@@ -90,5 +89,5 @@ public:
 
 protected:
 	int width, height, cellSize;
-	std::vector<std::vector<std::list<T>>> objects;
+	std::vector<std::vector<ObjectPooler<T>>> objects;
 };

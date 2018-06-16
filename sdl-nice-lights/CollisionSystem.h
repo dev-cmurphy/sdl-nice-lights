@@ -15,7 +15,7 @@ public:
 protected:
 
 	class CollisionComponent : public Component {
-		friend class VisualSystem;
+		friend class CollisionSystem;
 	public:
 		CollisionComponent(GameObject* h = NULL, Vector2 size = Vector2());
 		~CollisionComponent();
