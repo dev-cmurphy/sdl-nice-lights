@@ -6,11 +6,13 @@ class CollisionSystem
 {
 	friend class VisualSystem;
 public:
-	CollisionSystem(int w = 10, int h = 10, int cellSize = 64);
+	CollisionSystem(int w = 10, int h = 10, int cellSize = 128);
 	~CollisionSystem();
 
 	void update(std::vector<GameObject>& objects);
 	void addStaticComponent(int h, Vector2 pos, Vector2 size);
+
+	void addActiveComponent(int h, Vector2 pos, Vector2 size);
 
 protected:
 
@@ -23,7 +25,6 @@ protected:
 		Vector2 size;
 	};
 
-	int cellSize;
 	Grid<CollisionComponent> staticComponents;
 	Grid<CollisionComponent> activeComponents;
 };

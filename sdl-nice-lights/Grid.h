@@ -1,6 +1,6 @@
 #pragma once
 #include "GameObject.h"
-#include "ObjectPooler.h"
+#include <list>
 #include <vector>
 
 template <typename T>
@@ -16,31 +16,41 @@ public:
 		height = h;
 
 		for (int i = 0; i < w; i++) {
-			std::vector < ObjectPooler<T> > objs;
+			std::vector < std::list<T> > objs;
 			for (int j = 0; j < h; j++) {
-				objs.push_back(ObjectPooler<T>(8));
+				objs.push_back(std::list<T>());
 			}
 			objects.push_back(objs);
 		}
 	}
 
-	ObjectPooler<T>& getObjectsAt(size_t x, size_t y)
+	std::list<T>& getObjectsAt(size_t x, size_t y)
 	{
 		return objects[x][y];
 	}
 
-	T& addObjectAt(Vector2 pos) {
+	/*T& addObjectAt(Vector2 pos) {
 		Vector2 gridPos = pos;
 		gridPos.x = (int)(pos.x + 0.5f);
 		gridPos.y = (int)(pos.y + 0.5f);
-		return objects[gridPos.x][gridPos.y].getNew();
-	}
+		return objects[gridPos.x][gridPos.y].
+	}*/
 
 	void addObjectAt(Vector2 pos, T&& ref = T()) {
-		Vector2 gridPos = pos;
-		gridPos.x = (int)(pos.x + 0.5f);
-		gridPos.y = (int)(pos.y + 0.5f);
-		objects[gridPos.x][gridPos.y].create(ref);
+		pos = realToGrid(pos);
+		objects[pos.x][pos.y].push_back(ref);
+	}
+
+	void addObjectAt(Vector2 pos, T& ref = T()) {
+		pos = realToGrid(pos);
+		objects[pos.x][pos.y].push_back(ref);
+	}
+
+	Vector2 realToGrid(Vector2 pos) {
+		pos /= cellSize;
+		pos.x = (int)(pos.x + 0.5f);
+		pos.y = (int)(pos.y + 0.5f);
+		return pos;
 	}
 
 	const int getWidth() const {
@@ -89,5 +99,5 @@ public:
 
 protected:
 	int width, height, cellSize;
-	std::vector<std::vector<ObjectPooler<T>>> objects;
+	std::vector<std::vector<std::list<T>>> objects;
 };

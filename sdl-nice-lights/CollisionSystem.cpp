@@ -1,7 +1,7 @@
 #include "CollisionSystem.h"
 #include <iostream>
 
-CollisionSystem::CollisionSystem(int w, int h, int size) : staticComponents(w, h), activeComponents(w, h), cellSize(size)
+CollisionSystem::CollisionSystem(int w, int h, int size) : staticComponents(w, h, size), activeComponents(w, h, size)
 {
 	
 }
@@ -12,30 +12,53 @@ CollisionSystem::~CollisionSystem()
 
 void CollisionSystem::update(std::vector<GameObject>& objects)
 {
-	//std::cout << "Updating collision system...\n";
-	/*for (int i = 0; i < staticComponents.getWidth(); i++) {
-		for (int j = 0; j < staticComponents.getHeight(); j++) {
-			
-			std::list<CollisionComponent>& list = staticComponents.getObjectsAt(i, j);
-			for (auto c = list.begin(); c != list.end(); c++) {
+	// deplacement des comps dans les bonnes cells
+	for (int i = 0; i < activeComponents.getWidth(); i++) {
+		for (int j = 0; j < activeComponents.getHeight(); j++) {
 
-				//std::cout << "Component! " << i  << " " << j << " \n";
+			std::list<CollisionComponent>& comps = activeComponents.getObjectsAt(i, j);
+
+			for (auto a = comps.begin(); a != comps.end();) {
+
+				Vector2& a_pos = objects[a->holder].position;
+				Vector2& a_size = a->size;
+				Vector2 gridPos = activeComponents.realToGrid(a_pos);
+
+				if ((int)gridPos.x != i || (int)gridPos.y != j) {
+					activeComponents.addObjectAt(a_pos, *a);
+					a = comps.erase(a);
+				}
+				else {
+					a++;
+				}
+
+				std::cout << gridPos.x << ", " << gridPos.y << "\n";
 			}
 		}
-	}*/
-	for (int i = 0; i < staticComponents.getWidth(); i++) {
-		for (int j = 0; j < staticComponents.getHeight(); j++) {
+	}
 
-			ObjectPooler<CollisionComponent>& comps = staticComponents.getObjectsAt(i, j);
-			for (int a = 0; a < comps.activeTotal(); a++) {
+	// collision detection & resolution
+
+	for (int i = 0; i < activeComponents.getWidth(); i++) {
+		for (int j = 0; j < activeComponents.getHeight(); j++) {
+
+			std::list<CollisionComponent>& comps = activeComponents.getObjectsAt(i, j);
+			std::list<CollisionComponent>& staticComps = staticComponents.getObjectsAt(i, j);
+
+			for (auto a = comps.begin(); a != comps.end(); a++) {
 			
-				Vector2& a_pos = objects[comps[a].holder].position;
-				Vector2& a_size = comps[a].size;
+				Vector2& a_pos = objects[a->holder].position;
+				Vector2& a_size = a->size;
 
-				for (int b = a+1; b < comps.activeTotal(); b++) {
+				// collisions avec comps actifs de la cell
+				for (auto b = comps.begin(); b != comps.end(); b++) {
 					if (a != b) {
-
+						std::cout << "Testing collision\n";
 					}
+				}
+
+				for (auto s = staticComps.begin(); s != staticComps.end(); s++) {
+					std::cout << "Testing coll between active and static";
 				}
 			}
 		}
@@ -44,10 +67,12 @@ void CollisionSystem::update(std::vector<GameObject>& objects)
 
 void CollisionSystem::addStaticComponent(int h, Vector2 pos, Vector2 size)
 {
-	Vector2 gridPos = pos * (1.0f / (float)cellSize);
-	gridPos.x = (int)(gridPos.x + 0.5f);
-	gridPos.y = (int)(gridPos.y + 0.5f);
-	staticComponents.addObjectAt(gridPos, CollisionComponent(h, pos));
+	staticComponents.addObjectAt(pos, CollisionComponent(h, pos));
+}
+
+void CollisionSystem::addActiveComponent(int h, Vector2 pos, Vector2 size)
+{
+	activeComponents.addObjectAt(pos, CollisionComponent(h, pos));
 }
 
 CollisionSystem::CollisionComponent::CollisionComponent(int h, Vector2 s) : Component(h), size(s)

@@ -77,7 +77,7 @@ void VisualSystem::update(std::vector<GameObject>& objects)
 
 		SDL_Rect renderRect, destRect;
 		renderRect = i->second.texture.getRect(Vector2(0,0), i->second.scale);
-		destRect = i->second.texture.getRect(i->second.position - (i->second.texture.getSize() / 2), i->second.scale);
+		destRect = i->second.texture.getRect(i->second.position - (i->second.texture.getSize()* i->second.scale / 2), i->second.scale);
 		//std::cout << gridPos.x << ", " << gridPos.y << "\n";
 
 		/*for (auto c = physics->staticComponents.getObjectsAt(gridPos.x, gridPos.y).begin();
