@@ -1,6 +1,6 @@
 #include "Scene.h"
 
-Scene::Scene(SDL_Window* win, Vector2 size) : physics(10, 10, 128), visuals(win, size, &physics), objects(), commands() {
+Scene::Scene(SDL_Window* win, Vector2 size) : physics(10, 10, 128 * 4), visuals(win, size, &physics), objects(), commands() {
 	
 	visuals.addLight(Vector2(0, 0), 0, 255, 255, 255, 2);
 	visuals.addLight(Vector2(189, 260), 255, 0, 0, 255, 2);

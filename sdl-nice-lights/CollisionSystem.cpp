@@ -47,48 +47,76 @@ void CollisionSystem::update(std::vector<GameObject>& objects)
 
 			for (auto a = comps.begin(); a != comps.end(); a++) {
 			
-				if (objects[a->holder].hasMessage(MSG_MOVE)) {
+				//if (objects[a->holder].hasMessage(MSG_MOVE)) {
 
-					Vector2 delta(objects[a->holder].getMessage(MSG_MOVE));
+				Vector2 delta(objects[a->holder].getMessage(MSG_MOVE));
+				
+				//gravity here
+				//delta += Vector2(0, 1);
 
-					//std::cout << delta.x << ", " << delta.y << "\n";
+				//std::cout << delta.x << ", " << delta.y << "\n";
 
-					Vector2& a_pos = objects[a->holder].position;
-					const Vector2& a_size = a->size;
+				Vector2& a_pos = objects[a->holder].position;
+				const Vector2& a_size = a->size;
 
-					Vector2 nextPos = a_pos + delta;
+				Vector2 nextPos = a_pos + delta;
 
 
-					// collisions avec comps actifs de la cell
-					for (auto b = comps.begin(); b != comps.end(); b++) {
-						if (a != b) {
-							std::cout << "Testing collision\n";
-						}
+				// collisions avec comps actifs de la cell
+				for (auto b = comps.begin(); b != comps.end(); b++) {
+					if (a != b) {
+						std::cout << "Testing collision\n";
 					}
-
-					for (auto s = staticComps.begin(); s != staticComps.end(); s++) {
-
-						Vector2& s_pos = objects[s->holder].position;
-						const Vector2& s_size = s->size;
-
-
-						SDL_Rect a_rect, a_dRect, s_rect;
-						a_rect = { (int)a_pos.x, (int)a_pos.y, (int)a_size.x, (int)a_size.y };
-						a_dRect = { (int)nextPos.x, (int)nextPos.y, (int)a_size.x, (int)a_size.y };
-						s_rect = { (int)s_pos.x, (int)s_pos.y, (int)s_size.x, (int)s_size.y };
-
-						SDL_Rect result;
-
-						if (SDL_IntersectRect(&a_dRect, &s_rect, &result) != SDL_FALSE) {
-
-							Vector2 pen(result.w, result.h);
-
-							std::cout << "collision detected!" << pen.x << ", " << pen.y << "\n";
-						}
-					}
-
-					objects[a->holder].position += delta;
 				}
+
+				for (auto s = staticComps.begin(); s != staticComps.end(); s++) {
+
+					Vector2& s_pos = objects[s->holder].position;
+					const Vector2& s_size = s->size;
+
+
+					SDL_Rect a_rect, a_dRect, s_rect;
+					a_rect = { (int)(a_pos.x - a_size.x /2), (int)(a_pos.y - a_size.y / 2), (int)a_size.x, (int)a_pos.y };
+					a_dRect = { (int)(nextPos.x - a_size.x / 2), (int)(nextPos.y - a_size.y / 2), (int)a_size.x, (int)a_size.y };
+					s_rect = { (int)(s_pos.x - s_size.x / 2), (int)(s_pos.y - s_size.y / 2), (int)s_size.x, (int)s_size.y };
+
+					SDL_Rect result;
+
+					if (SDL_IntersectRect(&a_dRect, &s_rect, &result) != SDL_FALSE) {
+
+						Vector2 pen(result.w, result.h);
+
+						/*bool dx = delta.x >= 0;
+						bool dy = delta.y >= 0;
+
+						delta.y += result.h * (dy ? -1 : 1);
+						delta.x += result.w * (dx ? -1 : 1);*/
+
+
+
+						//std::cout << "collision detected!" << pen.x << ", " << pen.y << "\n";
+						if (a_pos.x + a_size.x / 2 <= s_pos.x - s_size.x / 2) { // pos précédente à gauche : delta x pos
+							delta.x -= result.w;
+						}
+
+						if (a_pos.y - a_size.y / 2 >= s_pos.y + s_size.y / 2) {
+							delta.y += result.h;
+						}
+							
+						if (a_pos.x - a_size.x / 2 >= s_pos.x + s_size.x / 2) { // pos prec droite : delta x neg
+							delta.x += result.w;
+						}
+
+						if (a_pos.y + a_size.y / 2 <= s_pos.y - s_size.y / 2) { // pos prec au dessus - delta y pos
+							delta.y -= result.h;
+						}
+					}
+				}
+
+				objects[a->holder].position += delta;
+
+				//}
+
 			}
 		}
 	}
