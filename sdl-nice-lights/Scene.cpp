@@ -8,7 +8,7 @@ Scene::Scene(SDL_Window* win, Vector2 size) : physics(10, 10, 128), visuals(win,
 	visuals.setGlobalIllumination(4, 30, 10);
 	
 	objects.push_back(GameObject());
-	objects.back().position = Vector2(100, 100);
+	objects.back().position = Vector2(200, 200);
 	physics.addActiveComponent(0, objects.back().position, Vector2(20, 20));
 
 	objects.push_back(GameObject());
@@ -79,10 +79,10 @@ void Scene::update()
 {
 	// test msg, to do in something like input comp or movecompwhatever
 
-	if (objects[player].hasMessage(MSG_MOVE)) {
+	/*if (objects[player].hasMessage(MSG_MOVE)) {
 
 		objects[player].position += Vector2(objects[player].getMessage(MSG_MOVE));
-	}
+	}*/
 
 	visuals.getLight(0).position = objects[player].position;
 

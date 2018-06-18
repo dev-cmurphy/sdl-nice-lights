@@ -71,6 +71,7 @@ void CollisionSystem::update(std::vector<GameObject>& objects)
 						Vector2& s_pos = objects[s->holder].position;
 						const Vector2& s_size = s->size;
 
+
 						SDL_Rect a_rect, a_dRect, s_rect;
 						a_rect = { (int)a_pos.x, (int)a_pos.y, (int)a_size.x, (int)a_size.y };
 						a_dRect = { (int)nextPos.x, (int)nextPos.y, (int)a_size.x, (int)a_size.y };
@@ -79,9 +80,14 @@ void CollisionSystem::update(std::vector<GameObject>& objects)
 						SDL_Rect result;
 
 						if (SDL_IntersectRect(&a_dRect, &s_rect, &result) != SDL_FALSE) {
-							//std::cout << "collision detected!\n";
+
+							Vector2 pen(result.w, result.h);
+
+							std::cout << "collision detected!" << pen.x << ", " << pen.y << "\n";
 						}
 					}
+
+					objects[a->holder].position += delta;
 				}
 			}
 		}
@@ -90,12 +96,12 @@ void CollisionSystem::update(std::vector<GameObject>& objects)
 
 void CollisionSystem::addStaticComponent(int h, Vector2 pos, Vector2 size)
 {
-	staticComponents.addObjectAt(pos, CollisionComponent(h, pos));
+	staticComponents.addObjectAt(pos, CollisionComponent(h, size));
 }
 
 void CollisionSystem::addActiveComponent(int h, Vector2 pos, Vector2 size)
 {
-	activeComponents.addObjectAt(pos, CollisionComponent(h, pos));
+	activeComponents.addObjectAt(pos, CollisionComponent(h, size));
 }
 
 CollisionSystem::CollisionComponent::CollisionComponent(int h, Vector2 s) : Component(h), size(s)
