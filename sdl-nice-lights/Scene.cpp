@@ -2,10 +2,10 @@
 
 Scene::Scene(SDL_Window* win, Vector2 size) : physics(10, 10, 128), visuals(win, size, &physics), objects(), commands() {
 	
-	visuals.addLight(Vector2(0, 0), 0, 120, 255, 255, 2);
-	visuals.addLight(Vector2(189, 260), 255, 255, 0, 255, 2);
+	visuals.addLight(Vector2(0, 0), 0, 255, 255, 255, 2);
+	visuals.addLight(Vector2(189, 260), 255, 0, 0, 255, 2);
 
-	visuals.setGlobalIllumination(40, 30, 10);
+	visuals.setGlobalIllumination(4, 30, 10);
 	
 	objects.push_back(GameObject());
 	objects.back().position = Vector2(100, 100);

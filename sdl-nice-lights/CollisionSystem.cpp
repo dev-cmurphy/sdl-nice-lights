@@ -32,7 +32,7 @@ void CollisionSystem::update(std::vector<GameObject>& objects)
 					a++;
 				}
 
-				std::cout << gridPos.x << ", " << gridPos.y << "\n";
+				//std::cout << gridPos.x << ", " << gridPos.y << "\n";
 			}
 		}
 	}
@@ -47,18 +47,41 @@ void CollisionSystem::update(std::vector<GameObject>& objects)
 
 			for (auto a = comps.begin(); a != comps.end(); a++) {
 			
-				Vector2& a_pos = objects[a->holder].position;
-				Vector2& a_size = a->size;
+				if (objects[a->holder].hasMessage(MSG_MOVE)) {
 
-				// collisions avec comps actifs de la cell
-				for (auto b = comps.begin(); b != comps.end(); b++) {
-					if (a != b) {
-						std::cout << "Testing collision\n";
+					Vector2 delta(objects[a->holder].getMessage(MSG_MOVE));
+
+					//std::cout << delta.x << ", " << delta.y << "\n";
+
+					Vector2& a_pos = objects[a->holder].position;
+					const Vector2& a_size = a->size;
+
+					Vector2 nextPos = a_pos + delta;
+
+
+					// collisions avec comps actifs de la cell
+					for (auto b = comps.begin(); b != comps.end(); b++) {
+						if (a != b) {
+							std::cout << "Testing collision\n";
+						}
 					}
-				}
 
-				for (auto s = staticComps.begin(); s != staticComps.end(); s++) {
-					std::cout << "Testing coll between active and static";
+					for (auto s = staticComps.begin(); s != staticComps.end(); s++) {
+
+						Vector2& s_pos = objects[s->holder].position;
+						const Vector2& s_size = s->size;
+
+						SDL_Rect a_rect, a_dRect, s_rect;
+						a_rect = { (int)a_pos.x, (int)a_pos.y, (int)a_size.x, (int)a_size.y };
+						a_dRect = { (int)nextPos.x, (int)nextPos.y, (int)a_size.x, (int)a_size.y };
+						s_rect = { (int)s_pos.x, (int)s_pos.y, (int)s_size.x, (int)s_size.y };
+
+						SDL_Rect result;
+
+						if (SDL_IntersectRect(&a_dRect, &s_rect, &result) != SDL_FALSE) {
+							//std::cout << "collision detected!\n";
+						}
+					}
 				}
 			}
 		}
