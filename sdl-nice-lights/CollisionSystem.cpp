@@ -32,7 +32,7 @@ void CollisionSystem::update(std::vector<GameObject>& objects)
 					a++;
 				}
 
-				//std::cout << gridPos.x << ", " << gridPos.y << "\n";
+				std::cout << gridPos.x << ", " << gridPos.y << "\n";
 			}
 		}
 	}
@@ -61,26 +61,41 @@ void CollisionSystem::update(std::vector<GameObject>& objects)
 				Vector2 nextPos = a_pos + delta;
 
 				// pour chaque cell environnante
-				std::pair<int, int> cells[5];
+				// POUR COLL AVEC ACTIVES
+				std::pair<int, int> cells[9];
 				cells[0] = { i, j };
 				cells[1] = { i - 1, j - 1 };
 				cells[2] = { i, j - 1 };
 				cells[3] = { i - 1, j };
 				cells[4] = { i - 1, j + 1 };
+				cells[5] = { i + 1, j };
+				cells[6] = { i + 1, j -1 };
+				cells[7] = { i + 1, j + 1};
+				cells[8] = { i, j + 1 };
 
+				// active colls
 				for (int z = 0; z < 5; z++) {
 					if (cells[z].first >= 0 && cells[z].first < activeComponents.getWidth()) {
 						if (cells[z].second >= 0 && cells[z].second < activeComponents.getHeight()) {
 
 							std::list<CollisionComponent>& otherComps = activeComponents.getObjectsAt(cells[z].first, cells[z].second);
-							std::list<CollisionComponent>& staticComps = staticComponents.getObjectsAt(cells[z].first, cells[z].second);
 							// collisions avec comps actifs de la cell
 							for (auto b = otherComps.begin(); b != otherComps.end(); b++) {
 								if (a != b) {
 									std::cout << "Testing collision\n";
 								}
 							}
+						}
+					}
+				}
 
+				// static colls
+				for (int z = 0; z < 9; z++) {
+					if (cells[z].first >= 0 && cells[z].first < activeComponents.getWidth()) {
+						if (cells[z].second >= 0 && cells[z].second < activeComponents.getHeight()) {
+
+							std::list<CollisionComponent>& staticComps = staticComponents.getObjectsAt(cells[z].first, cells[z].second);
+							
 							for (auto s = staticComps.begin(); s != staticComps.end(); s++) {
 
 								Vector2& s_pos = objects[s->holder].position;
@@ -97,16 +112,6 @@ void CollisionSystem::update(std::vector<GameObject>& objects)
 								if (SDL_IntersectRect(&a_dRect, &s_rect, &result) != SDL_FALSE) {
 
 									Vector2 pen(result.w, result.h);
-
-									/*bool dx = delta.x >= 0;
-									bool dy = delta.y >= 0;
-
-									delta.y += result.h * (dy ? -1 : 1);
-									delta.x += result.w * (dx ? -1 : 1);*/
-
-
-
-									//std::cout << "collision detected!" << pen.x << ", " << pen.y << "\n";
 									if (a_pos.x + a_size.x / 2 <= s_pos.x - s_size.x / 2) { // pos précédente à gauche : delta x pos
 										delta.x -= result.w;
 									}

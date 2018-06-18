@@ -20,6 +20,12 @@ Scene::Scene(SDL_Window* win, Vector2 size) : physics(10, 10, 128), visuals(win,
 	objects.back().position = Vector2(100, 300);
 	physics.addStaticComponent(2, objects.back().position, Vector2(170,40));
 
+	objects.push_back(GameObject());
+	visuals.addComponent(3, "allo.png");
+	objects.back().position = Vector2(270, 300);
+	physics.addStaticComponent(3, objects.back().position, Vector2(170, 40));
+
+
 
 	visuals.addComponent(0, "grr.png");
 	
