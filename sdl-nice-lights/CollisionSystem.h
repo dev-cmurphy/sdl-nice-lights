@@ -23,6 +23,7 @@ protected:
 		~CollisionComponent();
 
 		Vector2 size;
+		Vector2 velocity;
 	};
 
 	Grid<CollisionComponent> staticComponents;

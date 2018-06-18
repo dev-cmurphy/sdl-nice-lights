@@ -48,8 +48,8 @@ public:
 
 	Vector2 realToGrid(Vector2 pos) {
 		pos /= cellSize;
-		pos.x = (int)(pos.x + 0.5f);
-		pos.y = (int)(pos.y + 0.5f);
+		pos.x = (int)(pos.x);
+		pos.y = (int)(pos.y);
 		return pos;
 	}
 

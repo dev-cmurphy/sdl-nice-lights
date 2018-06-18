@@ -1,6 +1,6 @@
 #include "Scene.h"
 
-Scene::Scene(SDL_Window* win, Vector2 size) : physics(10, 10, 128 * 4), visuals(win, size, &physics), objects(), commands() {
+Scene::Scene(SDL_Window* win, Vector2 size) : physics(10, 10, 128), visuals(win, size, &physics), objects(), commands() {
 	
 	visuals.addLight(Vector2(0, 0), 0, 255, 255, 255, 2);
 	visuals.addLight(Vector2(189, 260), 255, 0, 0, 255, 2);
@@ -17,7 +17,7 @@ Scene::Scene(SDL_Window* win, Vector2 size) : physics(10, 10, 128 * 4), visuals(
 
 	objects.push_back(GameObject());
 	visuals.addComponent(2, "allo.png");
-	objects.back().position = Vector2(100, 100);
+	objects.back().position = Vector2(100, 300);
 	physics.addStaticComponent(2, objects.back().position, Vector2(170,40));
 
 

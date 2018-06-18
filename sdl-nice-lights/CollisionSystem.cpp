@@ -43,7 +43,6 @@ void CollisionSystem::update(std::vector<GameObject>& objects)
 		for (int j = 0; j < activeComponents.getHeight(); j++) {
 
 			std::list<CollisionComponent>& comps = activeComponents.getObjectsAt(i, j);
-			std::list<CollisionComponent>& staticComps = staticComponents.getObjectsAt(i, j);
 
 			for (auto a = comps.begin(); a != comps.end(); a++) {
 			
@@ -51,7 +50,7 @@ void CollisionSystem::update(std::vector<GameObject>& objects)
 
 				Vector2 delta(objects[a->holder].getMessage(MSG_MOVE));
 				
-				//gravity here
+				//gravity here ?
 				//delta += Vector2(0, 1);
 
 				//std::cout << delta.x << ", " << delta.y << "\n";
@@ -61,61 +60,75 @@ void CollisionSystem::update(std::vector<GameObject>& objects)
 
 				Vector2 nextPos = a_pos + delta;
 
+				// pour chaque cell environnante
+				std::pair<int, int> cells[5];
+				cells[0] = { i, j };
+				cells[1] = { i - 1, j - 1 };
+				cells[2] = { i, j - 1 };
+				cells[3] = { i - 1, j };
+				cells[4] = { i - 1, j + 1 };
 
-				// collisions avec comps actifs de la cell
-				for (auto b = comps.begin(); b != comps.end(); b++) {
-					if (a != b) {
-						std::cout << "Testing collision\n";
-					}
-				}
+				for (int z = 0; z < 5; z++) {
+					if (cells[z].first >= 0 && cells[z].first < activeComponents.getWidth()) {
+						if (cells[z].second >= 0 && cells[z].second < activeComponents.getHeight()) {
 
-				for (auto s = staticComps.begin(); s != staticComps.end(); s++) {
+							std::list<CollisionComponent>& otherComps = activeComponents.getObjectsAt(cells[z].first, cells[z].second);
+							std::list<CollisionComponent>& staticComps = staticComponents.getObjectsAt(cells[z].first, cells[z].second);
+							// collisions avec comps actifs de la cell
+							for (auto b = otherComps.begin(); b != otherComps.end(); b++) {
+								if (a != b) {
+									std::cout << "Testing collision\n";
+								}
+							}
 
-					Vector2& s_pos = objects[s->holder].position;
-					const Vector2& s_size = s->size;
+							for (auto s = staticComps.begin(); s != staticComps.end(); s++) {
 
-
-					SDL_Rect a_rect, a_dRect, s_rect;
-					a_rect = { (int)(a_pos.x - a_size.x /2), (int)(a_pos.y - a_size.y / 2), (int)a_size.x, (int)a_pos.y };
-					a_dRect = { (int)(nextPos.x - a_size.x / 2), (int)(nextPos.y - a_size.y / 2), (int)a_size.x, (int)a_size.y };
-					s_rect = { (int)(s_pos.x - s_size.x / 2), (int)(s_pos.y - s_size.y / 2), (int)s_size.x, (int)s_size.y };
-
-					SDL_Rect result;
-
-					if (SDL_IntersectRect(&a_dRect, &s_rect, &result) != SDL_FALSE) {
-
-						Vector2 pen(result.w, result.h);
-
-						/*bool dx = delta.x >= 0;
-						bool dy = delta.y >= 0;
-
-						delta.y += result.h * (dy ? -1 : 1);
-						delta.x += result.w * (dx ? -1 : 1);*/
+								Vector2& s_pos = objects[s->holder].position;
+								const Vector2& s_size = s->size;
 
 
+								SDL_Rect a_rect, a_dRect, s_rect;
+								a_rect = { (int)(a_pos.x - a_size.x / 2), (int)(a_pos.y - a_size.y / 2), (int)a_size.x, (int)a_pos.y };
+								a_dRect = { (int)(nextPos.x - a_size.x / 2), (int)(nextPos.y - a_size.y / 2), (int)a_size.x, (int)a_size.y };
+								s_rect = { (int)(s_pos.x - s_size.x / 2), (int)(s_pos.y - s_size.y / 2), (int)s_size.x, (int)s_size.y };
 
-						//std::cout << "collision detected!" << pen.x << ", " << pen.y << "\n";
-						if (a_pos.x + a_size.x / 2 <= s_pos.x - s_size.x / 2) { // pos précédente à gauche : delta x pos
-							delta.x -= result.w;
-						}
+								SDL_Rect result;
 
-						if (a_pos.y - a_size.y / 2 >= s_pos.y + s_size.y / 2) {
-							delta.y += result.h;
-						}
-							
-						if (a_pos.x - a_size.x / 2 >= s_pos.x + s_size.x / 2) { // pos prec droite : delta x neg
-							delta.x += result.w;
-						}
+								if (SDL_IntersectRect(&a_dRect, &s_rect, &result) != SDL_FALSE) {
 
-						if (a_pos.y + a_size.y / 2 <= s_pos.y - s_size.y / 2) { // pos prec au dessus - delta y pos
-							delta.y -= result.h;
+									Vector2 pen(result.w, result.h);
+
+									/*bool dx = delta.x >= 0;
+									bool dy = delta.y >= 0;
+
+									delta.y += result.h * (dy ? -1 : 1);
+									delta.x += result.w * (dx ? -1 : 1);*/
+
+
+
+									//std::cout << "collision detected!" << pen.x << ", " << pen.y << "\n";
+									if (a_pos.x + a_size.x / 2 <= s_pos.x - s_size.x / 2) { // pos précédente à gauche : delta x pos
+										delta.x -= result.w;
+									}
+
+									if (a_pos.y - a_size.y / 2 >= s_pos.y + s_size.y / 2) {
+										delta.y += result.h;
+									}
+
+									if (a_pos.x - a_size.x / 2 >= s_pos.x + s_size.x / 2) { // pos prec droite : delta x neg
+										delta.x += result.w;
+									}
+
+									if (a_pos.y + a_size.y / 2 <= s_pos.y - s_size.y / 2) { // pos prec au dessus - delta y pos
+										delta.y -= result.h;
+									}
+								}
+							}
 						}
 					}
 				}
 
 				objects[a->holder].position += delta;
-
-				//}
 
 			}
 		}
