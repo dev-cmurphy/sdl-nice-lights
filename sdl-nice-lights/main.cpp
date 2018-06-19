@@ -8,9 +8,9 @@ int main(int argc, char* argv[]) {
 	
 	SDL_Init(SDL_INIT_VIDEO);
 
-	window = SDL_CreateWindow("nice lights :)", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 600, 400, SDL_WINDOW_SHOWN);
+	window = SDL_CreateWindow("nice lights :)", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_SHOWN);
 	IMG_Init(IMG_INIT_PNG);
-	Scene scene(window, Vector2(600, 400));	
+	Scene scene(window, Vector2(800, 600));	
 
 	// FPS stuff
 	float startClock = 0;

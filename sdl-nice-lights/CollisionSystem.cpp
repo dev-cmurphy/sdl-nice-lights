@@ -73,6 +73,10 @@ void CollisionSystem::update(std::vector<GameObject>& objects)
 				cells[7] = { i + 1, j + 1};
 				cells[8] = { i, j + 1 };
 
+				if (nextPos.x >= activeComponents.getCellSize() * activeComponents.getWidth() || nextPos.x < 0 ||
+					nextPos.y >= activeComponents.getCellSize() * activeComponents.getHeight() || nextPos.y < 0)
+					break;
+
 				// active colls
 				for (int z = 0; z < 5; z++) {
 					if (cells[z].first >= 0 && cells[z].first < activeComponents.getWidth()) {
@@ -132,6 +136,8 @@ void CollisionSystem::update(std::vector<GameObject>& objects)
 						}
 					}
 				}
+
+
 
 				objects[a->holder].position += delta;
 
