@@ -1,8 +1,9 @@
 #pragma once
 #include "Grid.h"
 #include "VisualSystem.h"
-#include "Command.h"
+
 #include "MoveCommand.h"
+#include "JumpCommand.h"
 #include <iostream>
 
 class Command;

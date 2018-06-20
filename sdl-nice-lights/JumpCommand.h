@@ -2,17 +2,17 @@
 #include "Command.h"
 #include "GameObject.h"
 
-class MoveCommand : public Command
+class JumpCommand :
+	public Command
 {
 public:
-	MoveCommand(GameObject& actor, Vector2 delta);
-	~MoveCommand();
+	JumpCommand(GameObject& actor);
+	~JumpCommand();
 
 	virtual void execute();
 	virtual void undo();
 
 protected:
 	GameObject & actor;
-	Vector2 delta;
 };
 

@@ -57,8 +57,12 @@ bool Scene::input()
 	const Uint8 * state = SDL_GetKeyboardState(NULL);
 
 	Vector2 dir;
+	objects[player].sendMessage(MSG_FLYING);
 	if (state[commands["up"]]) {
 		dir += Vector2(0, -1);
+		Command* com = new JumpCommand(objects[player]);
+		//com->execute();
+		delete com;
 	}
 
 	if (state[commands["down"]]) {
@@ -76,7 +80,7 @@ bool Scene::input()
 	if (dir.sqrMagnitude() > 0) {
 
 		dir.normalize();
-		Command* com = new MoveCommand(&objects[player], dir * 100.0f / 17.0f);
+		Command* com = new MoveCommand(objects[player], dir * 100.0f / 17.0f);
 		com->execute();
 		delete com;
 

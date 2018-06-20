@@ -51,8 +51,16 @@ void CollisionSystem::update(std::vector<GameObject>& objects)
 				Vector2 delta(objects[a->holder].getMessage(MSG_MOVE));
 				
 				//gravity here ?
-				//delta += Vector2(0, 1);
-
+				if (objects[a->holder].hasMessage(MSG_JUMP)) {
+					delta.y = -10;
+				}
+				else if(!objects[a->holder].hasMessage(MSG_FLYING)){
+					delta.y = a->velocity.y + 1;
+					const int MAX_VEL = 15;
+					if (delta.y > MAX_VEL) {
+						delta.y = MAX_VEL;
+					}
+				}
 				//std::cout << delta.x << ", " << delta.y << "\n";
 
 				Vector2& a_pos = objects[a->holder].position;
@@ -139,10 +147,12 @@ void CollisionSystem::update(std::vector<GameObject>& objects)
 				}
 
 				Vector2 nextPos = a_pos + delta;
-				if (nextPos.x >= activeComponents.getCellSize() * activeComponents.getWidth() || nextPos.x < 0 ||
-					nextPos.y >= activeComponents.getCellSize() * activeComponents.getHeight() || nextPos.y < 0)
-					break;
-
+				if (nextPos.x >= activeComponents.getCellSize() * activeComponents.getWidth() || nextPos.x < 0)
+					delta.x = 0;
+				if (nextPos.y >= activeComponents.getCellSize() * activeComponents.getHeight() || nextPos.y < 0)
+					delta.y = 0;
+				
+				a->velocity = delta;
 				objects[a->holder].position += delta;
 			}
 		}

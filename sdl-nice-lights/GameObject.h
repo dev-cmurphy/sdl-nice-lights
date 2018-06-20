@@ -12,7 +12,9 @@ Vector2 position;
 enum MSG_TYPE
 {
 	MSG_MOVE = 1,
-	MSG_COLLISION = 2
+	MSG_JUMP,
+	MSG_FLYING,
+	MSG_COLLISION
 };
 
 class GameObject
@@ -25,7 +27,7 @@ public:
 
 	std::string tag; // for debugging purposes
 
-	void sendMessage(MSG_TYPE type, std::bitset<64> data);
+	void sendMessage(MSG_TYPE type, std::bitset<64> data = std::bitset<64>());
 	std::bitset<64> getMessage(MSG_TYPE type);
 	bool hasMessage(MSG_TYPE t);
 
