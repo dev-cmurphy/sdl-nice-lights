@@ -32,7 +32,7 @@ void CollisionSystem::update(std::vector<GameObject>& objects)
 					a++;
 				}
 
-				std::cout << gridPos.x << ", " << gridPos.y << "\n";
+				//std::cout << gridPos.x << ", " << gridPos.y << "\n";
 			}
 		}
 	}
@@ -58,7 +58,6 @@ void CollisionSystem::update(std::vector<GameObject>& objects)
 				Vector2& a_pos = objects[a->holder].position;
 				const Vector2& a_size = a->size;
 
-				Vector2 nextPos = a_pos + delta;
 
 				// pour chaque cell environnante
 				// POUR COLL AVEC ACTIVES
@@ -72,10 +71,6 @@ void CollisionSystem::update(std::vector<GameObject>& objects)
 				cells[6] = { i + 1, j -1 };
 				cells[7] = { i + 1, j + 1};
 				cells[8] = { i, j + 1 };
-
-				if (nextPos.x >= activeComponents.getCellSize() * activeComponents.getWidth() || nextPos.x < 0 ||
-					nextPos.y >= activeComponents.getCellSize() * activeComponents.getHeight() || nextPos.y < 0)
-					break;
 
 				// active colls
 				for (int z = 0; z < 5; z++) {
@@ -105,31 +100,37 @@ void CollisionSystem::update(std::vector<GameObject>& objects)
 								Vector2& s_pos = objects[s->holder].position;
 								const Vector2& s_size = s->size;
 
+								for (int c = 0; c < 2; c++) {
 
-								SDL_Rect a_rect, a_dRect, s_rect;
-								a_rect = { (int)(a_pos.x - a_size.x / 2), (int)(a_pos.y - a_size.y / 2), (int)a_size.x, (int)a_pos.y };
-								a_dRect = { (int)(nextPos.x - a_size.x / 2), (int)(nextPos.y - a_size.y / 2), (int)a_size.x, (int)a_size.y };
-								s_rect = { (int)(s_pos.x - s_size.x / 2), (int)(s_pos.y - s_size.y / 2), (int)s_size.x, (int)s_size.y };
+									Vector2 nextPos = a_pos + delta;
+									
+									SDL_Rect a_rect, a_dRect, s_rect;
+									a_rect = { (int)(a_pos.x - a_size.x / 2), (int)(a_pos.y - a_size.y / 2), (int)a_size.x, (int)a_pos.y };
+									a_dRect = { (int)(nextPos.x - a_size.x / 2), (int)(nextPos.y - a_size.y / 2), (int)a_size.x, (int)a_size.y };
+									s_rect = { (int)(s_pos.x - s_size.x / 2), (int)(s_pos.y - s_size.y / 2), (int)s_size.x, (int)s_size.y };
 
-								SDL_Rect result;
+									SDL_Rect result;
 
-								if (SDL_IntersectRect(&a_dRect, &s_rect, &result) != SDL_FALSE) {
+									if (SDL_IntersectRect(&a_dRect, &s_rect, &result) != SDL_FALSE) {
 
-									Vector2 pen(result.w, result.h);
-									if (a_pos.x + a_size.x / 2 <= s_pos.x - s_size.x / 2) { // pos précédente à gauche : delta x pos
-										delta.x -= result.w;
-									}
+										if (c == 0) {
+											if (a_pos.y - a_size.y / 2 >= s_pos.y + s_size.y / 2) {
+												delta.y += (result.h > SDL_abs(delta.y) ? -delta.y : result.h);
+											}
 
-									if (a_pos.y - a_size.y / 2 >= s_pos.y + s_size.y / 2) {
-										delta.y += result.h;
-									}
+											if (a_pos.y + a_size.y / 2 <= s_pos.y - s_size.y / 2) { // pos prec au dessus - delta y pos
+												delta.y -= (result.h > SDL_abs(delta.y) ? delta.y : result.h);
+											}
+										}
+										else {
+											if (a_pos.x + a_size.x / 2 <= s_pos.x - s_size.x / 2) { // pos précédente à gauche : delta x pos
+												delta.x -= (result.w > SDL_abs(delta.x) ? delta.x : result.w);
+											}
 
-									if (a_pos.x - a_size.x / 2 >= s_pos.x + s_size.x / 2) { // pos prec droite : delta x neg
-										delta.x += result.w;
-									}
-
-									if (a_pos.y + a_size.y / 2 <= s_pos.y - s_size.y / 2) { // pos prec au dessus - delta y pos
-										delta.y -= result.h;
+											if (a_pos.x - a_size.x / 2 >= s_pos.x + s_size.x / 2) { // pos prec droite : delta x neg
+												delta.x += (result.w > SDL_abs(delta.x) ? -delta.x : result.w);
+											}
+										}
 									}
 								}
 							}
@@ -137,10 +138,12 @@ void CollisionSystem::update(std::vector<GameObject>& objects)
 					}
 				}
 
-
+				Vector2 nextPos = a_pos + delta;
+				if (nextPos.x >= activeComponents.getCellSize() * activeComponents.getWidth() || nextPos.x < 0 ||
+					nextPos.y >= activeComponents.getCellSize() * activeComponents.getHeight() || nextPos.y < 0)
+					break;
 
 				objects[a->holder].position += delta;
-
 			}
 		}
 	}
